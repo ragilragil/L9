@@ -57,4 +57,4 @@ Spawn dalam 5 menit`,
 
 setInterval(checkBoss, 60000)
 
-client.login(DISCORD_TOKEN)
+client.login(process.env.DISCORD_TOKEN)
