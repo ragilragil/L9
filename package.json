@@ -2,9 +2,9 @@
   "name": "lordnine-boss-bot",
   "version": "1.0.0",
   "type": "module",
-  "main": "bot.js",
+  "main": "discordbot.js",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node discordbot.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
