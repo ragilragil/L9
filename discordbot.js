@@ -1,15 +1,13 @@
 import { Client, GatewayIntentBits } from "discord.js"
 import { createClient } from "@supabase/supabase-js"
 
-
 const supabase = createClient(
- "https://czppuovnxcolgjjveptz.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6cHB1b3ZueGNvbGdqanZlcHR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDYxMTgsImV4cCI6MjA4ODI4MjExOH0.hqbbFhWLMAPMT_x_FkXaC6fBpILimYawoBVlXkE_Nkw"
+ process.env.SUPABASE_URL,
+ process.env.SUPABASE_KEY
 )
 
-
-const DISCORD_TOKEN = "MTQ1OTU0MDQ2MDUwOTg2MDAwMA.GbS-wZ.Mqa62JGlSl7x07Ho35_Zovkw6aTtGYgI2xybhE"
-const CHANNEL_ID = "1454839891975471104"
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN
+const CHANNEL_ID = process.env.CHANNEL_ID
 
 const client = new Client({
  intents: [GatewayIntentBits.Guilds]
@@ -25,48 +23,54 @@ client.once("clientReady", () => {
 
 async function checkBoss() {
 
- const { data } = await supabase
- .from("boss")
- .select("*")
- 
- // logic boss
+ try {
 
- } catch (err) {
-  console.log("Boss check error:", err)
- }
-}
+  const { data, error } = await supabase
+   .from("boss")
+   .select("*")
 
- const now = new Date()
- const hour = now.getHours()
- const minute = now.getMinutes()
+  if (error) {
+   console.log("Supabase error:", error)
+   return
+  }
 
- for (const boss of data) {
+  const now = new Date()
+  const hour = now.getHours()
+  const minute = now.getMinutes()
 
- const [spawnHour, spawnMinute] = boss.spawn_time.split(":")
+  for (const boss of data) {
 
- if (
- parseInt(spawnHour) === hour &&
- parseInt(spawnMinute) - minute === 5
- ) {
+   const [spawnHour, spawnMinute] = boss.spawn_time.split(":")
 
- const channel = client.channels.cache.get(CHANNEL_ID)
+   if (
+    parseInt(spawnHour) === hour &&
+    parseInt(spawnMinute) - minute === 5
+   ) {
 
- channel.send({
- content: `@everyone 🔥 BOSS ALERT
+    const channel = await client.channels.fetch(CHANNEL_ID)
+
+    await channel.send({
+     content: `@everyone 🔥 BOSS ALERT
 
 Boss: ${boss.name}
 Level: ${boss.level}
 
 Spawn dalam 5 menit`,
- allowedMentions: { parse: ["everyone"] }
-})
+     allowedMentions: { parse: ["everyone"] }
+    })
 
- }
+    console.log("Alert terkirim:", boss.name)
 
+   }
+
+  }
+
+ } catch (err) {
+  console.log("Boss check error:", err)
  }
 
 }
 
 setInterval(checkBoss, 60000)
 
-client.login(process.env.DISCORD_TOKEN)
+client.login(DISCORD_TOKEN)
