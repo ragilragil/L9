@@ -1,6 +1,10 @@
 import { Client, GatewayIntentBits } from "discord.js"
 import { createClient } from "@supabase/supabase-js"
 
+process.on("uncaughtException", err => {
+ console.error("Uncaught Exception:", err)
+})
+
 const supabase = createClient(
  "https://czppuovnxcolgjjveptz.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6cHB1b3ZueGNvbGdqanZlcHR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDYxMTgsImV4cCI6MjA4ODI4MjExOH0.hqbbFhWLMAPMT_x_FkXaC6fBpILimYawoBVlXkE_Nkw"
@@ -12,10 +16,6 @@ const CHANNEL_ID = "1454839891975471104"
 
 const client = new Client({
  intents: [GatewayIntentBits.Guilds]
-})
-
-process.on("uncaughtException", err => {
- console.error("Uncaught Exception:", err)
 })
 
 process.on("unhandledRejection", err => {
