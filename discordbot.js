@@ -1,9 +1,6 @@
 import { Client, GatewayIntentBits } from "discord.js"
 import { createClient } from "@supabase/supabase-js"
 
-process.on("uncaughtException", err => {
- console.error("Uncaught Exception:", err)
-})
 
 const supabase = createClient(
  "https://czppuovnxcolgjjveptz.supabase.co",
