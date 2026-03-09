@@ -14,6 +14,14 @@ const client = new Client({
  intents: [GatewayIntentBits.Guilds]
 })
 
+process.on("uncaughtException", err => {
+ console.error("Uncaught Exception:", err)
+})
+
+process.on("unhandledRejection", err => {
+ console.error("Unhandled Rejection:", err)
+})
+
 client.once("clientReady", () => {
  console.log("Discord bot online")
 })
@@ -23,6 +31,13 @@ async function checkBoss() {
  const { data } = await supabase
  .from("boss")
  .select("*")
+ 
+ // logic boss
+
+ } catch (err) {
+  console.log("Boss check error:", err)
+ }
+}
 
  const now = new Date()
  const hour = now.getHours()
